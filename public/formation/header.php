@@ -184,8 +184,9 @@
                             }
                             ?>
 
-                            <?php if ($_SERVER['REMOTE_ADDR'] == "86.214.69.212") { 
-                                // https://speckyboy.com/notification-css-javascript/ ?>
+                            <?php if ($_SERVER['REMOTE_ADDR'] == "86.214.69.212") {
+                                // https://speckyboy.com/notification-css-javascript/ 
+                            ?>
                                 <!-- <i id="line" class="line"><span id="notification" style="padding-left: 15px;" id="notification" class="float fas icon notification"></span></i> -->
                             <?php } ?>
                             <?php

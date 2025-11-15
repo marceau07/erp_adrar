@@ -48,9 +48,9 @@
             <!-- <script src="https://cdn.datatables.net/1.13.1/js/dataTables.min.js"></script>
             <script src="https://cdn.datatables.net/editor/datatables.editor.min.js"></script> -->
             <script>
-                // $(function() {
-                //     $('nav a[href^="//' + SERVER_NAME + '/' + location.pathname + '"]').addClass('active');
-                // });
+                $(function() {
+                    $('nav a[href^="//' + SERVER_NAME + location.pathname + '"]').addClass('active');
+                });
                 let trainees = [];
 
                 const input = document.querySelector('#form_trainee_filter');

@@ -42,7 +42,7 @@ include_once("./header.php"); ?>
 <div class="container-fluid mb-3">
     <div>
         <!-- Nav tabs -->
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" id="subnavbar">
             <li class="nav-item">
                 <a class="nav-link text-dark" data-bs-toggle="tab" href="#accueil" onclick="/*getListAccueil();*/">Accueil</a>
             </li>
@@ -295,104 +295,104 @@ include_once("./header.php"); ?>
         <div class="col-8 offset-2">
 
             <!-- Ancien code par rapport aux évaluations de l'application -->
-            <!-- <div class="modules mt-3">
-            <details close>
-                <summary>
-                    <span class="admin-titles">Données du module HTML/CSS</span>
-                </summary>
-                <?php foreach ($tps as $value) if ($value['id_evaluation_dd'] == 1) { ?>
-                    <a class="btn btn-warning mb-2" href="./check.php?module=html-css&tp=<?= $value['evaluation_id'] ?>">Correction TP<?= $value ?></a>
-                <?php } ?>
-                <table class="table table-bordered table-striped table-responsive">
-                    <thead>
-                        <tr class="text-center">
-                            <th>TP n°</th>
-                            <th>(#ID) Prénom NOM</th>
-                            <th>Voir</th>
-                            <th>TP terminé</th>
-                            <th>TP corrigé</th>
-                            <th>Score obtenu/Score max</th>
-                            <th>Note</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($stagiaires)) {
-                            foreach ($stagiaires as $stagiaire) if ($stagiaire['evaluation_dd_link'] == "html-css") {
-                                $arr[0]["html-css"] += 1;
-                        ?>
-                                <tr>
-                                    <td class="text-center"><?= $stagiaire["evaluation_id"] ?></td>
-                                    <td>(<?= $stagiaire["stagiaire_id"] ?>)&nbsp;<?= $stagiaire["stagiaire_nom"] ?> <?= $stagiaire["stagiaire_prenom"] ?></td>
-                                    <td><a href="./achieved.php?module=html-css&tp=<?= $stagiaire["evaluation_id"] ?>&stagiaire_username=<?= $stagiaire["stagiaire_pseudo"] ?>&stagiaire_id=<?= $stagiaire["stagiaire_id"] ?>&correction=1" class="btn btn-info btn-sm">Voir</a></td>
-                                    <td><?= (!empty($stagiaire["stagiaire_evaluation_completed"]) ? '<span class="circle completed" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation terminée !"></span>' : '<span class="circle awaiting" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation en cours !"></span>') ?></td>
-                                    <td><?= (!empty($stagiaire["stagiaire_evaluation_correction"]) ? '<span class="circle completed" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation corrigée !"></span>' : '<span class="circle awaiting" style="cursor: pointer;" onclick="validInternCorrection(' . $stagiaire["stagiaire_id"] . ', ' . $stagiaire["evaluation_id"] . ', \'plus\');" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation non corrigée !"></span>') ?></td>
-                                    <td class="text-center">
-                                        <?php if (!empty($stagiaire["evaluation_errors_max"])) { ?>
-                                            <?= (!empty($stagiaire["stagiaire_evaluation_errors_found"]) ? '<i class="fa-solid fa-circle-minus" style="cursor: pointer; float: left; padding-top: 2%; color: var(--col_base);" onclick="validInternCorrection(' . $stagiaire["stagiaire_id"] . ', ' . $stagiaire["evaluation_id"] . ', \'minus\');"></i>' : '') ?>
-                                            <span id="errors_found_plus_one_<?= $stagiaire["evaluation_id"] ?>_<?= $stagiaire["stagiaire_id"] ?>" value="<?= intval($stagiaire["stagiaire_evaluation_errors_found"]) ?>"><?= $stagiaire["stagiaire_evaluation_errors_found"] ?></span>
-                                            /
-                                            <?= $stagiaire["evaluation_errors_max"] ?><?= ($stagiaire["stagiaire_evaluation_errors_found"] < $stagiaire["evaluation_errors_max"] ? '<i class="fa-solid fa-plus-circle" style="cursor: pointer; float: right; padding-top: 2%; color: var(--col_base);" onclick="validInternCorrection(' . $stagiaire["stagiaire_id"] . ', ' . $stagiaire["evaluation_id"] . ', \'plus\');"></i>' : '') ?>
-                                        <?php } ?>
-                                    </td>
-                                    <td class="text-center"><?= (!empty($stagiaire["evaluation_errors_max"]) ? number_format(floatval($stagiaire["stagiaire_evaluation_errors_found"] / $stagiaire["evaluation_errors_max"]) * 100, 0) : "") ?></td>
-                                </tr>
-                            <?php }
-                        }
-                        if (empty($arr[0]["html-css"]) || empty($stagiaires)) { ?>
-                            <tr>
-                                <td class="text-center" colspan="7">Aucune donnée à afficher</td>
+            <div class="modules mt-3">
+                <details close>
+                    <summary>
+                        <span class="admin-titles">Données du module HTML/CSS</span>
+                    </summary>
+                    <?php foreach ($tps as $value) if ($value['id_evaluation_dd'] == 1) { ?>
+                        <a class="btn btn-warning mb-2" href="./check.php?module=html-css&tp=<?= $value['evaluation_id'] ?>">Correction TP<?= $value ?></a>
+                    <?php } ?>
+                    <table class="table table-bordered table-striped table-responsive">
+                        <thead>
+                            <tr class="text-center">
+                                <th>TP n°</th>
+                                <th>(#ID) Prénom NOM</th>
+                                <th>Voir</th>
+                                <th>TP terminé</th>
+                                <th>TP corrigé</th>
+                                <th>Score obtenu/Score max</th>
+                                <th>Note</th>
                             </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            </details>
-        </div>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($stagiaires)) {
+                                foreach ($stagiaires as $stagiaire) if ($stagiaire['evaluation_dd_link'] == "html-css") {
+                                    $arr[0]["html-css"] += 1;
+                            ?>
+                                    <tr>
+                                        <td class="text-center"><?= $stagiaire["evaluation_id"] ?></td>
+                                        <td>(<?= $stagiaire["stagiaire_id"] ?>)&nbsp;<?= $stagiaire["stagiaire_nom"] ?> <?= $stagiaire["stagiaire_prenom"] ?></td>
+                                        <td><a href="./achieved.php?module=html-css&tp=<?= $stagiaire["evaluation_id"] ?>&stagiaire_username=<?= $stagiaire["stagiaire_pseudo"] ?>&stagiaire_id=<?= $stagiaire["stagiaire_id"] ?>&correction=1" class="btn btn-info btn-sm">Voir</a></td>
+                                        <td><?= (!empty($stagiaire["stagiaire_evaluation_completed"]) ? '<span class="circle completed" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation terminée !"></span>' : '<span class="circle awaiting" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation en cours !"></span>') ?></td>
+                                        <td><?= (!empty($stagiaire["stagiaire_evaluation_correction"]) ? '<span class="circle completed" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation corrigée !"></span>' : '<span class="circle awaiting" style="cursor: pointer;" onclick="validInternCorrection(' . $stagiaire["stagiaire_id"] . ', ' . $stagiaire["evaluation_id"] . ', \'plus\');" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation non corrigée !"></span>') ?></td>
+                                        <td class="text-center">
+                                            <?php if (!empty($stagiaire["evaluation_errors_max"])) { ?>
+                                                <?= (!empty($stagiaire["stagiaire_evaluation_errors_found"]) ? '<i class="fa-solid fa-circle-minus" style="cursor: pointer; float: left; padding-top: 2%; color: var(--col_base);" onclick="validInternCorrection(' . $stagiaire["stagiaire_id"] . ', ' . $stagiaire["evaluation_id"] . ', \'minus\');"></i>' : '') ?>
+                                                <span id="errors_found_plus_one_<?= $stagiaire["evaluation_id"] ?>_<?= $stagiaire["stagiaire_id"] ?>" value="<?= intval($stagiaire["stagiaire_evaluation_errors_found"]) ?>"><?= $stagiaire["stagiaire_evaluation_errors_found"] ?></span>
+                                                /
+                                                <?= $stagiaire["evaluation_errors_max"] ?><?= ($stagiaire["stagiaire_evaluation_errors_found"] < $stagiaire["evaluation_errors_max"] ? '<i class="fa-solid fa-plus-circle" style="cursor: pointer; float: right; padding-top: 2%; color: var(--col_base);" onclick="validInternCorrection(' . $stagiaire["stagiaire_id"] . ', ' . $stagiaire["evaluation_id"] . ', \'plus\');"></i>' : '') ?>
+                                            <?php } ?>
+                                        </td>
+                                        <td class="text-center"><?= (!empty($stagiaire["evaluation_errors_max"]) ? number_format(floatval($stagiaire["stagiaire_evaluation_errors_found"] / $stagiaire["evaluation_errors_max"]) * 100, 0) : "") ?></td>
+                                    </tr>
+                                <?php }
+                            }
+                            if (empty($arr[0]["html-css"]) || empty($stagiaires)) { ?>
+                                <tr>
+                                    <td class="text-center" colspan="7">Aucune donnée à afficher</td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </details>
+            </div>
 
-        <div class="modules mt-3">
-            <details open>
-                <summary>
-                    <span class="admin-titles">Données du module Bootstrap</span>
-                </summary>
-                <?php foreach ($tps as $value) if ($value['id_evaluation_dd'] == 3) { ?>
-                    <a class="btn btn-warning mb-2" href="./check.php?module=bootstrap&tp=<?= $value['evaluation_id'] ?>">Correction TP<?= $value ?></a>
-                <?php } ?>
-                <table class="table table-bordered table-striped table-responsive">
-                    <thead>
-                        <tr class="text-center">
-                            <th>TP n°</th>
-                            <th>(#ID) Prénom NOM</th>
-                            <th>Voir</th>
-                            <th>TP terminé</th>
-                            <th>TP corrigé</th>
-                            <th>Score obtenu/Score max</th>
-                            <th>Note</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($stagiaires)) {
-                            foreach ($stagiaires as $stagiaire) if ($stagiaire['evaluation_dd_link'] == "bootstrap") {
-                                $arr[0]["bootstrap"] += 1;
-                        ?>
-                                <tr>
-                                    <td class="text-center"><?= $stagiaire["evaluation_id"] ?></td>
-                                    <td>(<?= $stagiaire["stagiaire_id"] ?>)&nbsp;<?= $stagiaire["stagiaire_nom"] ?> <?= $stagiaire["stagiaire_prenom"] ?></td>
-                                    <td><a href="achieved.php?module=bootstrap&tp=<?= $stagiaire["evaluation_id"] ?>&stagiaire_username=<?= $stagiaire["stagiaire_username"] ?>&stagiaire_id=<?= $stagiaire["stagiaire_id"] ?>&correction=1" class="btn btn-info btn-sm">Voir</a></td>
-                                    <td><?= (!empty($stagiaire["stagiaire_evaluation_completed"]) ? '<span class="circle completed" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation terminée !"></span>' : '<span class="circle awaiting" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation en cours !"></span>') ?></td>
-                                    <td><?= (!empty($stagiaire["stagiaire_evaluation_correction"]) ? '<span class="circle completed" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation corrigée !"></span>' : '<span class="circle awaiting" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation non corrigée !"></span>') ?></td>
-                                    <td class="text-center"><?= $stagiaire["stagiaire_evaluation_errors_found"] ?>/<?= $stagiaire["evaluation_errors_max"] ?></td>
-                                    <td class="text-center"><?= number_format(floatval($stagiaire["stagiaire_evaluation_errors_found"] / $stagiaire["evaluation_errors_max"]) * 100, 0) ?></td>
-                                </tr>
-                            <?php }
-                        }
-                        if (empty($arr[0]["bootstrap"]) || empty($stagiaires)) { ?>
-                            <tr>
-                                <td class="text-center" colspan="7">Aucune donnée à afficher</td>
+            <div class="modules mt-3">
+                <details open>
+                    <summary>
+                        <span class="admin-titles">Données du module Bootstrap</span>
+                    </summary>
+                    <?php foreach ($tps as $value) if ($value['id_evaluation_dd'] == 3) { ?>
+                        <a class="btn btn-warning mb-2" href="./check.php?module=bootstrap&tp=<?= $value['evaluation_id'] ?>">Correction TP<?= $value ?></a>
+                    <?php } ?>
+                    <table class="table table-bordered table-striped table-responsive">
+                        <thead>
+                            <tr class="text-center">
+                                <th>TP n°</th>
+                                <th>(#ID) Prénom NOM</th>
+                                <th>Voir</th>
+                                <th>TP terminé</th>
+                                <th>TP corrigé</th>
+                                <th>Score obtenu/Score max</th>
+                                <th>Note</th>
                             </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            </details>
-        </div> -->
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($stagiaires)) {
+                                foreach ($stagiaires as $stagiaire) if ($stagiaire['evaluation_dd_link'] == "bootstrap") {
+                                    $arr[0]["bootstrap"] += 1;
+                            ?>
+                                    <tr>
+                                        <td class="text-center"><?= $stagiaire["evaluation_id"] ?></td>
+                                        <td>(<?= $stagiaire["stagiaire_id"] ?>)&nbsp;<?= $stagiaire["stagiaire_nom"] ?> <?= $stagiaire["stagiaire_prenom"] ?></td>
+                                        <td><a href="achieved.php?module=bootstrap&tp=<?= $stagiaire["evaluation_id"] ?>&stagiaire_username=<?= $stagiaire["stagiaire_username"] ?>&stagiaire_id=<?= $stagiaire["stagiaire_id"] ?>&correction=1" class="btn btn-info btn-sm">Voir</a></td>
+                                        <td><?= (!empty($stagiaire["stagiaire_evaluation_completed"]) ? '<span class="circle completed" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation terminée !"></span>' : '<span class="circle awaiting" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation en cours !"></span>') ?></td>
+                                        <td><?= (!empty($stagiaire["stagiaire_evaluation_correction"]) ? '<span class="circle completed" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation corrigée !"></span>' : '<span class="circle awaiting" data-bs-toggle="tooltip" data-bs-placement="right" title="Évaluation non corrigée !"></span>') ?></td>
+                                        <td class="text-center"><?= $stagiaire["stagiaire_evaluation_errors_found"] ?>/<?= $stagiaire["evaluation_errors_max"] ?></td>
+                                        <td class="text-center"><?= number_format(floatval($stagiaire["stagiaire_evaluation_errors_found"] / $stagiaire["evaluation_errors_max"]) * 100, 0) ?></td>
+                                    </tr>
+                                <?php }
+                            }
+                            if (empty($arr[0]["bootstrap"]) || empty($stagiaires)) { ?>
+                                <tr>
+                                    <td class="text-center" colspan="7">Aucune donnée à afficher</td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </details>
+            </div>
 
         </div>
     </div>

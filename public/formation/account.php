@@ -262,21 +262,21 @@ if (isset($_SESSION['utilisateur']['formateur_id']) && $_SESSION['utilisateur'][
 ob_start();
 include_once("./header.php");
 echo $form; ?>
-<script>
-    function changerAvatar(img) {
-        var avatars = document.querySelectorAll('.img-preview');
-        avatars.forEach(avatar => {
-            avatar.classList.remove('img-selected');
-        });
-        document.querySelector('.img-profile').src = img.src;
-        if (document.querySelector('input[name="form_avatar_formateur"]')) {
-            document.querySelector('input[name="form_avatar_formateur"]').value = img.dataset.id;
-        } else {
-            document.querySelector('input[name="form_avatar_stagiaire"]').value = img.dataset.id;
+    <script>
+        function changerAvatar(img) {
+            var avatars = document.querySelectorAll('.img-preview');
+            avatars.forEach(avatar => {
+                avatar.classList.remove('img-selected');
+            });
+            document.querySelector('.img-profile').src = img.src;
+            if (document.querySelector('input[name="form_avatar_formateur"]')) {
+                document.querySelector('input[name="form_avatar_formateur"]').value = img.dataset.id;
+            } else {
+                document.querySelector('input[name="form_avatar_stagiaire"]').value = img.dataset.id;
+            }
+            img.classList.add('img-selected');
         }
-        img.classList.add('img-selected');
-    }
-</script>
+    </script>
 <?php include_once("./js.php"); ?>
 <script>
     //TODO: not working

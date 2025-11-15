@@ -226,15 +226,15 @@ function envoyerMailTuteur($mailer, $id_stagiaire, $id_formateur, $documents, $d
         $numeros = "";
         $liens = "";
         if (!empty($formateur['carte_formateur_tel']) && !empty($formateur['carte_formateur_portable'])) {
-            $numeros .= '<p style="margin:0;"><a href="tel:' . $formateur['carte_formateur_tel'] . '">' . $formateur['carte_formateur_tel'] . '</a></p>';
-            $numeros .= '<p style="margin:0;"><a href="tel:' . $formateur['carte_formateur_portable'] . '">' . $formateur['carte_formateur_portable'] . '</a></p>';
+            $numeros .= '<p style="margin:0;">Tél. <a href="tel:' . $formateur['carte_formateur_tel'] . '">' . $formateur['carte_formateur_tel'] . '</a></p>';
+            $numeros .= '<p style="margin:0;">Port. <a href="tel:' . $formateur['carte_formateur_portable'] . '">' . $formateur['carte_formateur_portable'] . '</a></p>';
         } elseif (!empty($formateur['carte_formateur_tel'])) {
-            $numeros .= '<p style="margin:0;"><a href="tel:' . $formateur['carte_formateur_tel'] . '">' . $formateur['carte_formateur_tel'] . '</a></p>';
+            $numeros .= '<p style="margin:0;">Tél. <a href="tel:' . $formateur['carte_formateur_tel'] . '">' . $formateur['carte_formateur_tel'] . '</a></p>';
         } elseif (!empty($formateur['carte_formateur_portable'])) {
-            $numeros .= '<p style="margin:0;"><a href="tel:' . $formateur['carte_formateur_portable'] . '">' . $formateur['carte_formateur_portable'] . '</a></p>';
+            $numeros .= '<p style="margin:0;">Port. <a href="tel:' . $formateur['carte_formateur_portable'] . '">' . $formateur['carte_formateur_portable'] . '</a></p>';
         }
         if (!empty($formateur['carte_formateur_liens'])) {
-            if (str_contains(",", $formateur['carte_formateur_liens'])) {
+            if (str_contains($formateur['carte_formateur_liens'], ",")) {
                 foreach (explode(",", $formateur['carte_formateur_liens']) as $lien) {
                     $liens .= '<p style="margin:0;"><a href="' . $lien . '">' . $lien . '</a></p>';
                 }
@@ -247,7 +247,7 @@ function envoyerMailTuteur($mailer, $id_stagiaire, $id_formateur, $documents, $d
             '{{NOM_TUTEUR}}' => strtoupper($stage['stage_nom_tuteur']),
             '{{PRENOM_NOM_STAGIAIRE}}' => strtoupper($stage['stagiaire_nom']) . " " . ucwords($stage['stagiaire_prenom']),
             '{{LISTE_DOCUMENTS}}' => $liste_documents,
-            '{{CARTE_PRENOM}}' => ucwords($formateur['prenom_formateur']),
+            '{{CARTE_PRENOM}}' => ucwords($formateur['formateur_prenom']),
             '{{CARTE_NOM}}' => strtoupper($formateur['formateur_nom']),
             '{{CARTE_LOGO_SECTEUR}}' => $formateur['secteur_logo'],
             '{{CARTE_ADRESSE}}' => $formateur['carte_formateur_adresse_site'],
@@ -782,8 +782,26 @@ function readable_random_string($length = 6)
     $string = '';
     $vowels = array("a", "e", "i", "o", "u");
     $consonants = array(
-        'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm',
-        'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'
+        'b',
+        'c',
+        'd',
+        'f',
+        'g',
+        'h',
+        'j',
+        'k',
+        'l',
+        'm',
+        'n',
+        'p',
+        'r',
+        's',
+        't',
+        'v',
+        'w',
+        'x',
+        'y',
+        'z'
     );
 
     $max = $length / 2;

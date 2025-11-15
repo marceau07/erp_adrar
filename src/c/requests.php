@@ -55,12 +55,12 @@ if (!empty($_POST["btn_join_evaluation"])) {
     die("ko");
 }
 
-if (isset($_POST['form_filter_session']) && !empty($_POST['form_filter_session'])) {
+if (isset($_POST['form_filter_session'])) {
     $_SESSION['filtres']['session_id'] = filter_var($_POST['form_filter_session'], FILTER_VALIDATE_INT);
-    die(json_encode(true));
-} elseif(!isset($_POST['form_filter_session']) && !isset($_SESSION['filtres']['session_id'])) {
+    die(json_encode(['success' => true, 'message' => "Filtre de session changé"]));
+} elseif (!isset($_POST['form_filter_session']) && !isset($_SESSION['filtres']['session_id'])) {
     $_SESSION['filtres']['session_id'] = -1;
-    die(json_encode(true));
+    die(json_encode(['success' => true, 'message' => "Session initialisée"]));
 }
 
 if (!empty($_POST["save_code"])) {
@@ -595,7 +595,13 @@ if (isset($_POST['send_tp']) && isset($_FILES['fichier']) && !empty($_FILES['fic
     if (!is_dir("../../public/formation/stagiaires/" . $_SESSION['utilisateur']['stagiaire_pseudo'] . "/tps/")) {
         mkdir("../../public/formation/stagiaires/" . $_SESSION['utilisateur']['stagiaire_pseudo'] . "/tps/", 0777, true);
     }
-    if (move_uploaded_file($_FILES['fichier']['tmp_name'], "../../public/formation/stagiaires/" . $_SESSION['utilisateur']['stagiaire_pseudo'] . "/tps/" . $lien_ressource_rendue)) {
+    try {
+        $fileMoved = move_uploaded_file($_FILES['fichier']['tmp_name'], "../../public/formation/stagiaires/" . $_SESSION['utilisateur']['stagiaire_pseudo'] . "/tps/" . $lien_ressource_rendue);
+    } catch (Exception $e) {
+        die(json_encode(array("success" => false, "message" => $e->getMessage())));
+    }
+
+    if ($fileMoved) {
         $req = $db->prepare("REPLACE INTO stagiaires_ressources(id_stagiaire, id_ressource, stagiaire_ressource_rendue_lien) 
                             VALUES(:id_stagiaire, :id_ressource, :lien_ressource_rendue);");
         $req->bindValue(":id_stagiaire", filter_var($_SESSION['utilisateur']['stagiaire_id'], FILTER_VALIDATE_INT));
@@ -835,12 +841,12 @@ if (isset($_POST['get_list_trainees']) && !empty($_POST['get_list_trainees'])) {
     $tbody = "";
     $sql = "SELECT * 
             FROM stagiaires ";
-    if(isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] > 0) {
+    if (isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] > 0) {
         $sql .= " INNER JOIN sessions ON (session_id=id_session AND session_id=:id_session) ";
-    } elseif(isset($_POST['id_session']) && empty($_POST['id_session'])) {
+    } elseif (isset($_POST['id_session']) && empty($_POST['id_session'])) {
         $sql .= " INNER JOIN sessions ON (session_id=id_session) ";
         $sql .= " INNER JOIN formateurs ON (formateur_id = id_formateur) ";
-    } elseif(isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] == "-1") {
+    } elseif (isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] == "-1") {
         $sql .= " INNER JOIN sessions ON (session_id = id_session) ";
         $sql .= " INNER JOIN formateurs ON (formateur_id = id_formateur) ";
         $sql .= "INNER JOIN secteurs ON (secteur_id = id_secteur) ";
@@ -850,7 +856,7 @@ if (isset($_POST['get_list_trainees']) && !empty($_POST['get_list_trainees'])) {
             WHERE stagiaire_actif = 1 
             ORDER BY stagiaire_nom, stagiaire_prenom;";
     $req = $db->prepare($sql);
-    if(isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] > 0) {
+    if (isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] > 0) {
         $req->bindValue(':id_session', filter_var($_POST['id_session'], FILTER_VALIDATE_INT), PDO::PARAM_INT);
     }
     $req->execute();
@@ -888,9 +894,9 @@ if (isset($_POST['get_list_exercises']) && !empty($_POST['get_list_exercises']))
     $sql = "SELECT cours_module_libelle, cours_title, cours_ressource_titre, stagiaire_prenom, stagiaire_nom, stagiaire_pseudo, stagiaire_ressource_rendue_lien, session_nom 
             FROM stagiaires 
             INNER JOIN sessions ON (session_id=id_session) ";
-    if(isset($_POST['id_session']) && empty($_POST['id_session'])) {
+    if (isset($_POST['id_session']) && empty($_POST['id_session'])) {
         $sql .= " INNER JOIN formateurs ON (formateur_id = id_formateur) ";
-    } elseif(isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] == "-1") {
+    } elseif (isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] == "-1") {
         $sql .= " INNER JOIN formateurs ON (formateur_id = id_formateur) ";
         $sql .= "INNER JOIN secteurs ON (secteur_id = id_secteur) ";
     }
@@ -900,12 +906,12 @@ if (isset($_POST['get_list_exercises']) && !empty($_POST['get_list_exercises']))
             JOIN cours_modules ON (cours_modules.cours_module_id = cours.id_module) 
             LEFT JOIN stagiaires_ressources ON (cours_ressource_id = id_ressource AND stagiaire_id = id_stagiaire) 
             WHERE stagiaire_actif = 1 ";
-    if(isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] > 0) {
+    if (isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] > 0) {
         $sql .= " AND stagiaires.id_session=:id_session ";
     }
     $sql .= " ORDER BY session_nom, stagiaire_nom, stagiaire_prenom;";
     $req = $db->prepare($sql);
-    if(isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] > 0) {
+    if (isset($_POST['id_session']) && !empty($_POST['id_session']) && $_POST['id_session'] > 0) {
         $req->bindValue(':id_session', filter_var($_POST['id_session'], FILTER_VALIDATE_INT), PDO::PARAM_INT);
     }
     $req->execute();
@@ -1458,10 +1464,11 @@ if (isset($_POST['get_courses']) &&  !empty($_POST['get_courses'])) {
     $success = true;
 
     if ($_SESSION['utilisateur']['formateur_id'] > 0) {
-        $sql_select_cours = "SELECT cours_id, cours_title, cours_synopsis, cours_link, cours_module_libelle, cours_module_illustration, formateur_nom, formateur_prenom 
+        $sql_select_cours = "SELECT cours_id, cours_title, cours_synopsis, cours_link, cours_module_libelle, cours_module_illustration, cours_ressource_id, formateur_nom, formateur_prenom 
                             FROM cours c 
                             INNER JOIN cours_modules cm ON cm.cours_module_id = c.id_module
                             INNER JOIN formateurs f ON (f.formateur_id = c.id_formateur) 
+                            LEFT JOIN cours_ressources cr ON cr.id_cours = c.cours_id  
                             WHERE 1 ";
         if (isset($_POST['recherche']) && !empty($_POST['recherche'])) {
             $mots_cles = explode(" ", filter_var(trim($_POST['recherche'], FILTER_SANITIZE_SPECIAL_CHARS)));
@@ -1472,10 +1479,11 @@ if (isset($_POST['get_courses']) &&  !empty($_POST['get_courses'])) {
             $sql_select_cours .= " AND " . implode(' AND ', $conditions);
         }
         $sql_select_cours .= " AND cours_module_uuid=:cours_uuid
+                                GROUP BY cours_id
                                 ORDER BY cours_position;";
         $req_select_cours = $db->prepare($sql_select_cours);
     } else {
-        $sql_select_cours = "SELECT cours_id, cours_title, cours_synopsis, cours_link, cours_module_libelle, cours_module_illustration, formateur_nom, formateur_prenom 
+        $sql_select_cours = "SELECT cours_id, cours_title, cours_synopsis, cours_link, cours_module_libelle, cours_module_illustration, cours_ressource_id, formateur_nom, formateur_prenom 
                             FROM cours c 
                             INNER JOIN cours_modules cm ON cm.cours_module_id = c.id_module
                             INNER JOIN formateurs f ON (f.formateur_id = c.id_formateur) ";
@@ -1484,7 +1492,8 @@ if (isset($_POST['get_courses']) &&  !empty($_POST['get_courses'])) {
         } else {
             $sql_select_cours .= " INNER JOIN cours_sessions cs ON c.cours_id = cs.id_cours ";
         }
-        $sql_select_cours .= "  WHERE cours_session_active = 1
+        $sql_select_cours .= "  LEFT JOIN cours_ressources cr ON cr.id_cours = c.cours_id  
+                                WHERE cours_session_active = 1
                                 AND cours_module_uuid=:cours_uuid ";
         if (isset($_POST['recherche']) && !empty($_POST['recherche'])) {
             $mots_cles = explode(" ", filter_var(trim($_POST['recherche'], FILTER_SANITIZE_SPECIAL_CHARS)));
@@ -1497,6 +1506,7 @@ if (isset($_POST['get_courses']) &&  !empty($_POST['get_courses'])) {
         if (!isset($_SESSION["utilisateur"]["id_session"]) || empty($_SESSION["utilisateur"]["id_session"])) {
             $sql_select_cours .= " GROUP BY cours_id ";
         }
+        $sql_select_cours .= " GROUP BY cours_id ";
         $sql_select_cours .= " ORDER BY cours_position;";
         $req_select_cours = $db->prepare($sql_select_cours);
         if (isset($_SESSION["utilisateur"]["id_session"]) && !empty($_SESSION["utilisateur"]["id_session"])) {
@@ -1529,6 +1539,7 @@ if (isset($_POST['get_courses']) &&  !empty($_POST['get_courses'])) {
                         <div class="card">
                             <span class="card-img-top">
                                 <img class="img-course" alt="Illustration ' . $cours["cours_module_libelle"] . '" src="/erp/public/formation/imgs/' . (file_exists('/var/www/html/erp/public/formation/imgs/' . $cours['cours_module_illustration']) ? $cours['cours_module_illustration'] : "no_data.svg") . '" loading="lazy" >
+                                ' . (isset($cours["cours_ressource_id"]) && !empty($cours["cours_ressource_id"]) ? '<i class="fa-solid fa-book text-black" style="color: black;position: absolute;top: 10px;right: 10px;"></i>' : '') . '
                             </span>
                             <div class="card-body">
                                 <h5 class="card-title text-decoration-underline">' . $cours["cours_title"] . '</h5>

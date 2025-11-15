@@ -22,11 +22,11 @@ $(document).ready(function () {
                 data: {
                     form_filter_session: $('#form_filter_session').val()
                 },
-                success: function () {
-                    if ($('#navbar .nav-link.active')) {
-                        $('.nav-item.active').trigger('click');
-                    } else if ($('.nav-link.active')) {
-                        $('.nav-link.active').trigger('click');
+                success: (r) => {
+                    if ($('#subnavbar .nav-link.active').length) {
+                        $('#subnavbar .nav-link.active')[0].click();
+                    } else if ($('#navbar .nav-link.active').length) {
+                        $('#navbar .nav-link.active')[0].click();
                     }
                 }
             });

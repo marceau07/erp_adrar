@@ -59,7 +59,7 @@ $_SESSION['csrf_token'] = $csrfToken;
                         <label for="form_login_pass" class="text-white">Mot de passe</label>
                         <input type="password" class="form-control border-0 float-end" name="form_login_pass" placeholder="motdepasse" autocomplete="off">
                     </div>
-                    <p class="text-white">Mot de passe oublié ? <a href="oublie.php">Génèrez-en un nouveau</a></a></p>
+                    <p class="text-white">Mot de passe oublié ? <a href="oublie.php">Générez-en un nouveau</a></a></p>
                     <input type="submit" value="Se connecter" class="btn btn-primary full-width text-white">
                 </form>
             </div>
